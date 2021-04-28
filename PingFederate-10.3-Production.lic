@@ -1,0 +1,14 @@
+ID=00178835
+WSTrustSTS=true
+OAuth=true
+SaasProvisioning=true
+Product=PingFederate
+Version=10.3
+EnforcementType=3
+Tier=Free
+IssueDate=2021-04-28
+ExpirationDate=2021-05-28
+DeploymentMethod=Docker
+Organization=CYBERIAM HOLDINGS LTD
+SignCode=FF0F
+Signature=302C02145F524BBD427C3F9DE2CFA1E1D865368A7EB358C7021439DB0CB88D616AE8EC679D5696D61DE215D86632
