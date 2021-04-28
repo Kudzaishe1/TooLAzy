@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+#*
+The server uses this HTML page to perform SLO with WS-Federation
+and OpenID Connect partners. This template is used when the SLO was
+initiated by a partner. It is "invisible" in the sense that it displays
+only a spinner and no additional status information.
+
+For WS-Federation sessions, the partner's logout endpoint is loaded in a
+hidden iframe. For OpenID Connect sessions, a small image is loaded
+for each of the OAuth client's registered logout URL's.
+
+Before redirecting, the page waits until
+$minTimeToWaitMillis elapses and the window's onload event fires. However, 
+logout endpoint redirects may cause the window's onload event to fire before 
+the logout is complete for a given endpoint. If sessions are not being cleared 
+correctly, it may be necessary to increase the $minTimeToWaitMillis timeout value. 
+
+If logout endpoints are delayed in loading and the window's onload event
+has not fired, the page redirects after $maxTimeToWaitMillis.
+
+Velocity variables (identified by the $ character) are generated
+at runtime by the server.
+
+Change text or formatting as needed. Modifying Velocity statements
+is not recommended as it may interfere with expected server behavior.
+*#
+
+<!-- template name: sourceid-wsfed-idp-signout-cleanup-invisible-template.html -->
+
+#set( $messageKeyPrefix = "sourceid-wsfed-idp-signout-cleanup-invisible-template." )
+#set( $minTimeToWaitMillis = 1000 )
+#set( $maxTimeToWaitMillis = 3000 )
+
+<html lang="$locale.getLanguage()" dir="ltr">
+<head>
+    <title>$templateMessages.getMessage($messageKeyPrefix, "title")</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <base href="$CurrentPingFedBaseURL"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <link rel="stylesheet" media="all" type="text/css" href="assets/css/main.css" />
+</head>
+
+<body>
+
+<script language="javascript">
+        var windowLoaded = false;
+        var minTimeReached = false;
+        var maxTimeReached = false;
+        var formSubmitted = false;
+        window.onload = function() { 
+            windowLoaded = true;
+            checkStateTransition();
+        }
+        window.setTimeout(function() { 
+            minTimeReached = true;
+            checkStateTransition();
+        }, $minTimeToWaitMillis);
+        window.setTimeout(function() { 
+            maxTimeReached = true;
+            checkStateTransition();
+        }, $maxTimeToWaitMillis);
+        function checkStateTransition() {
+            if (!formSubmitted && ((windowLoaded && minTimeReached) || maxTimeReached)) {
+                formSubmitted = true;
+                document.forms[0].submit(); 
+            }
+        }
+</script>
+
+<div class="ping-container">
+    
+    <!-- 
+    if there is a logo present in the 'company-logo' container,
+    then 'has-logo' class should be added to 'ping-header' container.
+    -->
+    <div class="ping-header">
+        <span class="company-logo"><!-- client company logo here --></span>
+        $templateMessages.getMessage($messageKeyPrefix, "info")
+    </div><!-- .ping-header -->
+    
+    <div class="ping-body-container">
+        <form method="GET" action="$resumepath">
+            <div class="ping-spinner"></div>
+
+            #foreach( $idpEntityId in $wsfIdpList.keySet() )
+                <iframe class="ping-hidden" src="$escape.escape($wsfIdpList.get($idpEntityId))"></iframe>
+            #end
+            #foreach( $spEntityId in $spList.keySet() )
+                <iframe class="ping-hidden" src="$escape.escape($spList.get($spEntityId))"></iframe>
+            #end
+            #foreach ($oidcEndpoint in $oidcEndpointList)
+    			<img src="$escape.escape($oidcEndpoint.value)" style="display: none">
+			#end
+        </form>
+
+    </div><!-- .ping-body-container -->
+    
+    <div class="ping-footer-container">
+        <div class="ping-footer">
+            <div class="ping-credits"></div>
+            <div class="ping-copyright">$templateMessages.getMessage("global.footerMessage")</div>
+        </div> <!-- .ping-footer -->
+    </div> <!-- .ping-footer-container -->
+    
+</div><!-- .ping-container -->
+
+</body>
+</html>

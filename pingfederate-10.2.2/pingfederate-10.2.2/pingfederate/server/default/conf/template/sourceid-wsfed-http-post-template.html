@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+#*
+The server renders this HTML page in an end-user's browser only when
+auto-submit is not available because JavaScript is disabled in
+the end-user's browser.
+
+Velocity variables (identified by the $ character) are generated
+at runtime by the server.
+
+Change text or formatting as needed. Modifying Velocity statements
+is not recommended as it may interfere with expected server behavior.
+*#
+
+<!-- template name: sourceid-wsfed-http-post-template.html -->
+
+ #set( $messageKeyPrefix = "sourceid-wsfed-http-post-template." )
+
+<html><head><title>$templateMessages.getMessage($messageKeyPrefix, "title")</title></head>
+<body>
+<form method="POST" action="$action">
+<input type="hidden" name="wa" value="wsignin1.0" />
+<input type="hidden" name="wresult" value="$escape.escape($rstrdoc)" />
+#if( $wctx )
+<input type="hidden" name="wctx" value="$escape.escape($wctx)" />
+#end
+<noscript><p>$templateMessages.getMessage($messageKeyPrefix, "note")</p><input type="submit" value="$templateMessages.getMessage($messageKeyPrefix, "submitButton")" /></noscript>
+</form>
+<script language="javascript">window.setTimeout('document.forms[0].submit()',0);</script>
+</body>
+</html>

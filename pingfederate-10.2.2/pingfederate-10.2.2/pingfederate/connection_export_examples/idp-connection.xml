@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    EntityDescriptor is the standard SAML 2.0 metadata root element representing a connection between and IdP and SP.
+        PingFederate uses this SAML 2.0 metadata specification and extends it using custom attributes and extensions.
+
+    entityID: the unique connection identifier.
+    name: the 'friendly' connection name.
+    baseUrl: the base for all URLs in this connection. If specified, connection endpoints and URLs 
+        may be relative to this base.
+    LogLevel: the level of logging for the connection [NONE, STANDARD, FULL, ENHANCED].
+    isActive: [true|false] indicates whether the connection is active.
+
+-->
+<md:EntityDescriptor entityID="PF-DEMO" urn:name="Demo IdP" urn:baseUrl="https://localhost:9031" urn:LogLevel="NONE"
+                     urn:isActive="true" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     xmlns:urn="urn:sourceid.org:saml2:metadata-extension:v2">
+    <md:Extensions>
+        <!-- EntityExtension is a proprietary PingFederate element containing connection configuration options -->
+        <urn:EntityExtension>
+            <!--
+                includeX509inXmlSig: indicates whether a KeyInfo element containing the X.509 Certificate should be included
+                    when producing signed XML documents.
+            -->
+            <urn:DigitialSignatureAliases includeX509inXmlSig="false"/>
+            <!--
+                The Encryption element contains the connection's encryption and decryption policy information.
+            -->
+            <urn:Encryption>
+                <urn:EncryptionPolicy SLOEncryptSubjectNameID="false" EncryptSubjectNameID="false"
+                                      EncryptAssertion="false"
+                                      KeyTransportAlgorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"
+                                      EncryptionAlgorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"/>
+
+                <urn:DecryptionPolicy SLOSubjectNameIDEncrypted="false" AttributeEncrypted="false"
+                                      SubjectNameIDEncrypted="false" AssertionEncrypted="false"/>
+            </urn:Encryption>
+            <urn:Dependencies>
+                <!--
+                    The MD5 fingerprint of the X.509 certificate of the key used for message signing. This
+                    key pair must exist on the PingFederate instance to which the connection will be imported.
+                -->
+                <urn:SigningKeyPairReference MD5Fingerprint="2C1F06CE56F7DDE5827E3E10D4000FA8"/>
+                <!--
+                    The base 64 encoded X.509 certificate of the connection's primary digital signature verification certificate.
+                -->
+                <urn:DsigVerificationCert>
+                    <urn:Base64EncodedCert>
+                        MIICVTCCAb6gAwIBAgIGARHDU6iPMA0GCSqGSIb3DQEBBQUAMG4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRYwFAYDVQQKEw1QaW5nIElkZW50aXR5MRUwEwYDVQQLEwxQaW5nRmVkZXJhdGUxEjAQBgNVBAMTCWRlbW8gZHNpZzAeFw0wNzA0MDUxOTU4MzFaFw0xMjA0MDMxOTU4MzFaMG4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRYwFAYDVQQKEw1QaW5nIElkZW50aXR5MRUwEwYDVQQLEwxQaW5nRmVkZXJhdGUxEjAQBgNVBAMTCWRlbW8gZHNpZzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAqp3n70+zHzniZuv+c2RPAi/maOTQERjA1Nd8a4Cq62EkkUruU5abYF3og3FbbOlAW3Fb/dD6d5cbjuyKEEmkHRy+ZjXjH4ZeP9McQPhY3h+WCDWjIr9xE05f1YkWJhKBjEA4HYvfPSNe6udgBUrsJG1XM8tqGNS/A7H4zYgcva0CAwEAATANBgkqhkiG9w0BAQUFAAOBgQAf59McYBnyk+LNmd6H0AC2khiXHMOLWUfbpL0NUEgK4VDk9svVmyIj4rcTOnT6ZNXlftiN0Y/zUd1OMXD9biLqyDn03doymvEZiclxXknqyMRp8YmXujDYslfc78Zdql8Nzz1mUooTgfmYgb/gqMTE2ACjZt1IBJdlxEu2Yu/V9A==</urn:Base64EncodedCert>
+                </urn:DsigVerificationCert>
+                <!--
+                    The base 64 encoded X.509 certificate of the connection's secondary digital signature verification certificate
+                    (same format as DsigVerificationCert).
+                -->
+                <urn:SecondaryDsigVerificationCert/>
+                <!--
+                    The MD5 fingerprint of the X.509 certificate of the key to be used for decrypting messages sent from the IdP partner
+                    (same format as SigningKeyPairReference).
+                -->
+                <urn:DecryptionKeyPairReference/>
+                <!--
+                    The base 64 encoded X.509 certificate used for encrypting XML messages sent to the IdP partner
+                    (same format as DsigVerificationCert).
+                -->
+                <urn:EncryptionCert/>
+                <!--
+                    The base 64 encoded X.509 certificate used to authenticate inbound SOAP messages sent to this SP
+                    (same format as DsigVerificationCert).
+                -->
+                <urn:SSLAuthVerificationCert>
+                    <urn:Base64EncodedCert>
+                        MIICOTCCAaKgAwIBAgIGARZeGa4lMA0GCSqGSIb3DQEBBQUAMGAxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMQwwCgYDVQQKEwNvcmcxDTALBgNVBAsTBHVuaXQxFjAUBgNVBAMTDURlbW8gU1NMIEF1dGgwHhcNMDcxMTIwMTcyNzI5WhcNMDgxMTE5MTcyNzI5WjBgMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ08xDzANBgNVBAcTBkRlbnZlcjEMMAoGA1UEChMDb3JnMQ0wCwYDVQQLEwR1bml0MRYwFAYDVQQDEw1EZW1vIFNTTCBBdXRoMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjmGQ3PbbNwZeFE66tOJxWKREGXJFd+6/gp86+BCPDRAN3Vd6Xq+LavTNsswA3qBDxeFzfjJE3USGd4MOloxA7+eEpZqWPq1yqgRYmKj/ADg4B7lUSmgvgRXUI89kibAXnJlOfbm5bbibh9hUpOf5hOJagKh99sPZOJ2I8fwFPBwIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAI8CuXwHrIerxIaaLEpM9qYV1TysP/wpvM6Kt/IsqYqVgj7gFnppxN8X8iZtpsqC8hnCaDBdxJPmgVwBOEwwtSBKeQCTDCEHM+HQBCnEinLFat81as2xjvkpASsJEUuxp6g/ogMUPER054/Y4U3R4FjJth+sZpUe2WXx27naU/UB</urn:Base64EncodedCert>
+                </urn:SSLAuthVerificationCert>
+                <!--
+                    The SoapAuth element contains credentials (or references to credentials) used for authenticating 
+                    the SOAP back-channel.
+
+                    providerID: must be "this" indicating this connection in all sub elements of Incoming and Outgoing
+                -->
+                <urn:SoapAuth>
+                    <!--
+                        The Incoming element describes credentials the IdP partner uses to authenticate 
+                        SOAP calls to our server.
+                    -->
+                    <soap:Incoming xmlns:soap="http://www.sourceid.org/2004/04/soapauth">
+                        <!--
+                            The None element indicates that a digital signature on the message is required for
+                            authentication.
+
+                            ssl: [true:false] indicates if SOAP requests from this connection must be made over SSL.
+                        -->
+                        <soap:None ssl="true" providerID="this"/>
+                        <!--
+                            The Basic element indicates that HTTP Basic authentication is required for
+                            authentication.
+                        -->
+                        <soap:Basic username="usrname" password="pass" ssl="true" providerID="this"/>
+                        <!--
+                            The X509Cert element indicates that certificate authentication is required.
+                        -->
+                        <soap:X509Cert providerID="this">
+                            <!--
+                                The alias element indicates that the cert is unanchored and "local reference" is a
+                                reference to the SSLAuthVerificationCert element.
+                            -->
+                            <soap:alias>local reference</soap:alias>
+                        </soap:X509Cert>
+                    </soap:Incoming>
+                    <!--
+                        The Outgoing element describes credentials used to authenticate when
+                        making SOAP calls to the IdP partner.
+                    -->
+                    <soap:Outgoing xmlns:soap="http://www.sourceid.org/2004/04/soapauth">
+                        <!--
+                            The None element indicates that a digital signature on the message is required for
+                            authentication.
+
+                            disableCertChainValidation: [true:false] if true, the normal procedure of walking the chain
+                            of trust on the SSL server certificate and verifying that the certificate's SubjectCN matches 
+                            the host name of the server is not performed.
+                        -->
+                        <soap:None disableCertChainValidation="false" providerID="this"/>
+                    </soap:Outgoing>
+                </urn:SoapAuth>
+            </urn:Dependencies>
+        </urn:EntityExtension>
+    </md:Extensions>
+    <!--
+        The IDPSSODescriptor is a standard SAML 2.0 metadata element that describes the role (IdP) and SSO profile
+        configurations of the connection.
+
+        WantAuthnRequestsSigned: [true:false] dictates if authn requests sent to the IdP partner are signed.
+        protocolSupportEnumeration: the protocol of the connection.
+    -->
+    <md:IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:Extensions>
+            <urn:RoleExtension ArtifactTimeoutSeconds="10">
+                <!--
+                    The IncomingBindings element describes the bindings over which messages are accepted from the IdP partner.
+                -->
+                <urn:IncomingBindings SOAP="true" Redirect="true" POST="true" Artifact="true"/>
+                <!--
+                    The EnabledProfiles element lists the SAML 2.0 profiles this connection supports.
+                -->
+                <urn:EnabledProfiles SPInitiatedSLO="true" SPInitiatedSSO="true" IDPInitiatedSLO="true" IDPInitiatedSSO="true"/>
+                <!--
+                    The IDP element defines connection specific configuration.
+                    AssertionsSigned: [true:false] indicates whether the assertion should be signed
+                        regardless of binding.
+                -->
+                <urn:IDP AssertionsSigned="false">
+                    <!--
+                        The TargetAttributeMapping element defines how attributes from the assertion are mapped to the
+                            attribute contract of the adapter.
+                        AdapterInstanceId: is the instance id of the SP adapter.
+                    -->
+                    <urn:TargetAttributeMapping AdapterInstanceId="spadapter">
+                        <!--
+                            This element says to take the subject of the assertion and map its value into the
+                            userid field of the adapter.
+                        -->
+                        <urn:AttributeMap Value="SAML_SUBJECT" Type="Assertion" Name="userid"/>
+                        <!--
+                            This element says to take the attribute named "Member Status" from the assertion and map
+                            its value into the "member status" field of the adapter.
+                        -->
+                        <urn:AttributeMap Value="Member Status" Type="Assertion" Name="member status"/>
+                        <!--
+                            This element says to fulfill the "name" attribute of the adapter with a concatenation of
+                            "First Name" and "Last Name" attributes from the assertion.
+                        -->
+                        <urn:AttributeMap Value="${First Name} ${Last Name}" Type="Text" Name="name"/>
+                        <!--
+                            This element says to take the "Email Address" attribute from the assertion and map
+                            its value into the "email address" field of the adapter.
+                        -->
+                        <urn:AttributeMap Value="Email Address" Type="Assertion" Name="email address"/>
+                    </urn:TargetAttributeMapping>
+                    <urn:AccountLinkingAndMapping IncludeAdditionalAttributes="false" Type="mapping"/>
+                    <urn:ErrPageMsg/>
+                </urn:IDP>
+            </urn:RoleExtension>
+        </md:Extensions>
+        <!-- The following are the standard SAML endpoints and bindings of the connection.  Note that the URLs are
+             relative to the base URL defined above on the EntityDescriptor element. -->
+        <md:ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="/idp/ARS.ssaml2" index="0"/>
+        <md:SingleLogoutService Location="/idp/SLO.saml2" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"/>
+        <md:SingleLogoutService Location="/idp/SLO.saml2" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"/>
+        <md:SingleLogoutService Location="/idp/SLO.saml2" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"/>
+        <md:SingleLogoutService Location="/idp/SLO.ssaml2" Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"/>
+        <md:SingleSignOnService Location="/idp/SSO.saml2" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"/>
+        <md:SingleSignOnService Location="/idp/SSO.saml2" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"/>
+        <md:SingleSignOnService Location="/idp/SSO.saml2" Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"/>
+        <!-- The Attribute elements define the named attributes that are expected to be sent in the assertion
+             from the IdP partner.
+             Note that these names are used in the AttributeMap elements of the TargetAttributeMapping -->
+        <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="Email Address"
+                        xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"/>
+        <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="Member Status"
+                        xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"/>
+        <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="Last Name"
+                        xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"/>
+        <saml:Attribute NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="First Name"
+                        xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"/>
+    </md:IDPSSODescriptor>
+    <md:ContactPerson contactType="administrative">
+        <md:GivenName>Ping</md:GivenName>
+        <md:SurName>Identity</md:SurName>
+    </md:ContactPerson>
+</md:EntityDescriptor>

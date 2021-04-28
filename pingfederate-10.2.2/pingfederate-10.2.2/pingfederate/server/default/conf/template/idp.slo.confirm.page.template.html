@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+#*
+If required, the server may render this HTML page in an end-user's browser to obtain
+user's consent for IdP-initiated SLO.
+*#
+
+<!-- template name: idp.slo.confirm.page.template.html -->
+
+#set( $messageKeyPrefix = "idp.slo.confirm.page.template." )
+#if ($cancelled)
+  #set( $title = "title.cancelled" )
+#else
+  #set( $title = "title" )
+#end
+
+<html lang="$locale.getLanguage()" dir="ltr">
+<head>
+    <title>$templateMessages.getMessage($messageKeyPrefix, $title)</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <base href="$CurrentPingFedBaseURL"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <link rel="stylesheet" media="all" type="text/css" href="assets/css/main.css" />
+    <script language="JavaScript">
+        function giveConsent(consentGiven)
+        {
+            document.consentForm.consentGiven.value = consentGiven;
+            document.consentForm.submit();
+        }
+    </script>
+</head>
+
+<body>
+    
+    <div class="ping-container">
+        
+        <!-- 
+         if there is a logo present in the 'company-logo' container,
+         then 'has-logo' class should be added to 'ping-header' container.
+         -->
+        <div class="ping-header">
+            <span class="company-logo"><!-- client company logo here --></span>
+            $templateMessages.getMessage($messageKeyPrefix, $title)
+        </div><!-- .ping-header -->
+        
+        <div class="ping-body-container">
+            #if ($cancelled)
+                <div class="messages">
+                    <div>$templateMessages.getMessage($messageKeyPrefix, "info.cancelled")</div>
+                </div>
+            #else
+                <form method="POST" action="$action" name="consentForm">
+                    <input type="hidden" name="consentGiven" value="true">
+                    <input type="hidden" name="csrfToken" value="$csrfToken">
+
+                    <div class="section-title">
+                        $templateMessages.getMessage($messageKeyPrefix, "question")
+                    </div>
+
+                    <div class="ping-buttons">
+
+                        <a onclick="giveConsent(true);" class="ping-button normal allow" title="$templateMessages.getMessage($messageKeyPrefix, "yes")">
+                            $templateMessages.getMessage($messageKeyPrefix, "yes")
+                        </a>
+                        <a onclick="giveConsent(false);" class="ping-button blue deny" title="$templateMessages.getMessage($messageKeyPrefix, "no")">
+                            $templateMessages.getMessage($messageKeyPrefix, "no")
+                        </a>
+                    </div><!-- .ping-buttons -->
+                </form>
+            #end
+        </div><!-- .ping-body-container -->
+        
+        <div class="ping-footer-container">
+            <div class="ping-footer">
+                <div class="ping-credits"></div>
+            <div class="ping-copyright">$templateMessages.getMessage("global.footerMessage")</div>
+            </div> <!-- .ping-footer -->
+        </div> <!-- .ping-footer-container -->
+        
+    </div><!-- .ping-container -->
+    
+</body>
+</html>

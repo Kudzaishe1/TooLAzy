@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+## Tell the browser not to render this page if it's contained within a frame.
+## This is to prevent Clickjacking attack.
+
+$HttpServletResponse.setHeader("X-Frame-Options", "DENY")
+
+<!-- template name: oauth.device.user-code.page.template.html -->
+
+#set( $messageKeyPrefix = "oauth.device.user-code-confirm.page.template." )
+
+<html lang="$locale.getLanguage()" dir="ltr">
+<head>
+    <title>$templateMessages.getMessage($messageKeyPrefix, "title")</title>
+    <base href="$CurrentPingFedBaseURL"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <link rel="stylesheet" media="all" type="text/css" href="assets/css/main.css" />
+</head>
+
+<body onload="setFocus()">
+
+<div class="ping-container">
+
+    <!--
+    if there is a logo present in the 'company-logo' container,
+    then 'has-logo' class should be added to 'ping-header' container.
+    -->
+    <div class="ping-header">
+        <span class="company-logo"><!-- client company logo here --></span>
+        $templateMessages.getMessage($messageKeyPrefix, "title")
+    </div><!-- .ping-header -->
+
+    <div class="ping-body-container">
+        <form method="post" action="$action">
+            <input type="hidden" name="check-user-code" value="true"/>
+            <input type="hidden" name="cSRFToken" value="$cSRFToken"/>
+            <input type="hidden" name="user-code" value="$userCode">
+            <div class="ping-body">
+                #if($errorMessageKey)
+                <div class="ping-messages">
+                    <div class="ping-error">$templateMessages.getMessage($messageKeyPrefix, $errorMessageKey)</div>
+                </div>
+                #end
+
+                <div class="ping-messages">
+                    <div>
+                        $templateMessages.getMessage($messageKeyPrefix, "info")
+                    </div>
+                </div>
+
+                <div class="ping-input-label">
+                    $templateMessages.getMessage($messageKeyPrefix, "fields.user-code")
+                </div>
+                <div class="ping-input-container">
+                    <input id="user-code" type="text" size="36" onKeyPress="return postOnReturn(event)"
+                           value="$userCode" readonly disabled/>
+                </div>
+                ## .ping-input-label **
+
+                <div class="ping-buttons">
+                    <input type="hidden" name="ok" value="Submit"/>
+
+                    <a href="#" onclick="postOk(); return false;" class="ping-button normal allow"
+                       title='$templateMessages.getMessage($messageKeyPrefix, "buttons.submit")'>
+                        $templateMessages.getMessage($messageKeyPrefix, "buttons.submit")
+                    </a>
+                </div>
+
+            </div><!-- .ping-body -->
+        </form>
+        <div class="ping-clr"></div>
+    </div><!-- .ping-body-container -->
+
+    <div class="ping-footer-container">
+        <div class="ping-footer">
+            <div class="ping-credits"></div>
+            <div class="ping-copyright">$templateMessages.getMessage("global.footerMessage")</div>
+        </div> <!-- .ping-footer -->
+    </div> <!-- .ping-footer-container -->
+
+</div><!-- .ping-container -->
+<script type="text/javascript">
+
+    function postOk() {
+        submitForm()
+    }
+
+    function submitForm()
+    {
+        document.forms[0]['ok'].value = 'clicked';
+        document.forms[0].submit();
+    }
+
+    function postOnReturn(e) {
+        var keycode;
+        if (window.event)
+            keycode = window.event.keyCode;
+        else if (e)
+            keycode = e.which;
+        else
+            return true;
+
+        if (keycode == 13) {
+            postOk();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function setMobile(mobile) {
+        var className = ' mobile',
+            hasClass = (bodyTag.className.indexOf(className) !== -1);
+
+        if(mobile && !hasClass) {
+            bodyTag.className += className;
+        } else if (!mobile && hasClass) {
+            bodyTag.className = bodyTag.className.replace(className, '');
+        }
+
+        ## Check if this is the PingOne Mobile App **
+        #if($HttpServletRequest.getHeader('X-Ping-Client-Version'))
+        if(mobile) {
+            bodyTag.className += ' embedded';
+        }
+        #end
+    }
+
+    function getScreenWidth() {
+        return (window.outerHeight) ? window.outerWidth : document.body.clientWidth;
+    }
+
+    function setFocus() {
+        var platform = navigator.platform;
+        if (platform != null && platform.indexOf("iPhone") == -1) {
+            document.getElementById('user-code').focus();
+        }
+    }
+
+    var bodyTag = document.getElementsByTagName('body')[0],
+        width = getScreenWidth();
+
+    if(/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        setMobile(true);
+    } else {
+        setMobile((width <= 480));
+        window.onresize = function() {
+            width = getScreenWidth();
+            setMobile((width <= 480));
+        }
+    }
+</script>
+</body>
+</html>

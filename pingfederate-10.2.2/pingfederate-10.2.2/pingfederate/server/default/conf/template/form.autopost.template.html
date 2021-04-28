@@ -1,0 +1,40 @@
+#*
+Whenever the server POSTs a form, this template is used to auto-submit
+a form using JavaScript. If JavaScript is disabled, the end-user is
+prompted to click a button to POST the form manually.
+
+Velocity variables (identified by the $ character) are generated
+at runtime by the server.
+
+Change text or formatting as needed. Modifying Velocity statements
+is not recommended as it may interfere with expected server behavior.
+
+It is recommended to sanitize the values that are displayed using
+$escape.escape() for example $escape.escape($name).
+*#
+
+
+<!-- template name: form.autopost.template.html -->
+
+ #set( $messageKeyPrefix = "form.autopost.template." )
+
+<html>
+    <head>
+        <title>$templateMessages.getMessage($messageKeyPrefix, "title")</title>
+        <meta name="referrer" content="origin"/>
+        <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    </head>
+    <body onload="javascript:document.forms[0].submit()">
+       <noscript>
+            <p>
+                <strong>$templateMessages.getMessage($messageKeyPrefix, "noteTitle"):</strong> $templateMessages.getMessage($messageKeyPrefix, "note")
+            </p>
+        </noscript>
+        <form method="post" action="$escape.escape($action)">
+            #foreach( $name in $formControls.keySet() )
+            <input type="hidden" name="$escape.escape($name)" value="$escape.escape($formControls.get($name))"/>
+            #end
+            <noscript><input type="submit" value="$templateMessages.getMessage($messageKeyPrefix, "resume")"/></noscript>
+        </form>
+    </body>
+</html>

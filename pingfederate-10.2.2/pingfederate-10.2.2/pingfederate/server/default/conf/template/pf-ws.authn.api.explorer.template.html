@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+#*
+The server renders this HTML page in an end-user's browser when
+using authentication API explorer page.
+
+Velocity variables (identified by the $ character) are generated
+at runtime by the server.
+
+The following variables are available on this page, but not used by default:
+
+$flowsUrl             - The url of flows endpoint for Authn API Applications
+$descriptionUrl       - The url of description endpoint for Authn API Applications
+$helpUrl              - The url of help page
+
+It is recommended to sanitize the values that are displayed using $escape.escape() for example $escape.escape($client_id).
+
+Change text or formatting as needed. Modifying Velocity statements
+is not recommended as it may interfere with expected server behavior.
+*#
+
+<!-- template name:pf-ws.authn.api.explorer.template.html -->
+
+#set( $messageKeyPrefix = "pf-ws.authn.api.explorer.template." )
+
+#set ($cssUrl = "assets/apiexplorer/styles.css")
+#set ($vendorjs = "assets/apiexplorer/vendor.bundle.js")
+#set ($mainjs = "assets/apiexplorer/main.bundle.js")
+
+<html lang="$locale.getLanguage()" dir="ltr">
+<head>
+    <base href="$CurrentPingFedBaseURL"/>
+    <title>$templateMessages.getMessage($messageKeyPrefix, "title")</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
+    <link href="$cssUrl" type="text/css" rel="stylesheet">
+    <script id="flowUrl">"$flowsUrl"</script>
+    <script id="descriptionUrl">"$descriptionUrl"</script>
+    <script id="postmanUrl">"$postmanUrl"</script>
+    <script id="helpUrl">"$helpUrl"</script>
+</head>
+
+<body>
+<div id="root"></div>
+<script src="$vendorjs"></script>
+<script src="$mainjs"></script>
+</body>
+</html>

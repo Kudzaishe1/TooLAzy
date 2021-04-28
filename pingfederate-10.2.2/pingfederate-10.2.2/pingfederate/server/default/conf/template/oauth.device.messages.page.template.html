@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+## Tell the browser not to render this page if it's contained within a frame.
+## This is to prevent Clickjacking attack.
+#*
+The following variables are available on this page, but not used by default:
+$client_id      - The ID of the OAuth client used in this transaction
+
+It is recommended to sanitize the values that are displayed using $escape.escape() for example $escape.escape($client_id).
+*#
+
+$HttpServletResponse.setHeader("X-Frame-Options", "DENY")
+
+<!-- template name: oauth.device.messages.page.template.html -->
+
+#set( $messageKeyPrefix = "oauth.device.messages.page.template." )
+
+<html lang="$locale.getLanguage()" dir="ltr">
+<head>
+    <title>$templateMessages.getMessage($messageKeyPrefix, "title")</title>
+    <base href="$CurrentPingFedBaseURL"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <link rel="stylesheet" media="all" type="text/css" href="assets/css/main.css" />
+</head>
+
+<body>
+
+<div class="ping-container">
+
+    <!--
+    if there is a logo present in the 'company-logo' container,
+    then 'has-logo' class should be added to 'ping-header' container.
+    -->
+    <div class="ping-header">
+        <span class="company-logo"><!-- client company logo here --></span>
+        $templateMessages.getMessage($messageKeyPrefix, "title")
+    </div><!-- .ping-header -->
+
+    <div class="ping-body-container">
+        <div class="ping-messages">
+            #if($errorMessageKey)
+            <div class="ping-error">$templateMessages.getMessage($messageKeyPrefix, $errorMessageKey)</div>
+            #end
+            #if($messageKey)
+            <div>$templateMessages.getMessage($messageKeyPrefix, $messageKey)</div>
+            #end
+        </div>
+
+        <div class="ping-clr"></div>
+    </div><!-- .ping-body-container -->
+
+</div><!-- .ping-container -->
+</body>
+</html>

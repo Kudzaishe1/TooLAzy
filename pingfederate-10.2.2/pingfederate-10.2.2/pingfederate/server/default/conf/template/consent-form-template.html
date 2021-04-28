@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+#*
+If required, the server may render this HTML page in an end-user's browser to obtain
+user's consent for SSO to an SP.
+*#
+
+<!-- template name: consent-form-template.html -->
+<!-- $entityId will output the Entity ID -->
+
+#set( $messageKeyPrefix = "consent-form-template." )
+
+<html lang="$locale.getLanguage()" dir="ltr">
+<head>
+    <title>$templateMessages.getMessage($messageKeyPrefix, "title")</title>
+    <base href="$CurrentPingFedBaseURL"/>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css"/>
+	<script language="JavaScript">
+		function giveConsent(consentGiven)
+		{
+			document.consentForm.consentGiven.value = consentGiven;
+			document.consentForm.submit();
+		}
+	</script>
+</head>
+<body>
+    
+<div class="ping-container">
+    
+    <!-- 
+    if there is a logo present in the 'company-logo' container,
+    then 'has-logo' class should be added to 'ping-header' container.
+    -->
+    <div class="ping-header">
+        <span class="company-logo"><!-- client company logo here --></span>
+        $templateMessages.getMessage($messageKeyPrefix, "title")
+    </div><!-- .ping-header -->
+    
+    <div class="ping-body-container">
+
+        <div class="section-title">
+            SP Entity ID: $entityId
+        </div>
+
+        <form method="GET" action="$action" name="consentForm">
+        	<input type="hidden" name="consentGiven" value="true">
+                <div class="section-title">
+                    $templateMessages.getMessage($messageKeyPrefix, "question")
+                </div>
+
+                <label class="input-radio stacked">
+                    <input type="radio" name="$consentTypeName" value="$consentTypeValueExplicit" checked>
+                    $templateMessages.getMessage($messageKeyPrefix, "explicit")
+                    <div class="circle"></div>
+                </label>
+                <label class="input-radio stacked">
+                    <input type="radio" name="$consentTypeName" value="$consentTypeValueImplicit">
+                    $templateMessages.getMessage($messageKeyPrefix, "implicit")
+                    <div class="circle"></div>
+                </label>
+                <label class="input-radio stacked">
+                    <input type="radio" name="$consentTypeName" value="$consentTypeValueObtained">
+                    $templateMessages.getMessage($messageKeyPrefix, "obtained")
+                    <div class="circle"></div>
+                </label>
+                <label class="input-radio stacked">
+                    <input type="radio" name="$consentTypeName" value="$consentTypeValuePrior">
+                    $templateMessages.getMessage($messageKeyPrefix, "prior")
+                    <div class="circle"></div>
+                </label>
+                <label class="input-radio stacked">
+                    <input type="radio" name="$consentTypeName" value="$consentTypeValueUnspecified" >
+                    $templateMessages.getMessage($messageKeyPrefix, "unspecified")
+                    <div class="circle"></div>
+                </label>
+                <div class="ping-buttons">
+                    <a onclick="giveConsent(true);" class="ping-button normal allow" title="$templateMessages.getMessage($messageKeyPrefix, "save")">
+                        $templateMessages.getMessage($messageKeyPrefix, "save")
+                    </a>
+                    <a onclick="giveConsent(false);" class="ping-button blue deny" title="$templateMessages.getMessage($messageKeyPrefix, "cancel")">
+                        $templateMessages.getMessage($messageKeyPrefix, "cancel")
+                    </a>
+                </div><!-- .ping-buttons -->
+            </form>
+        </div><!-- .ping-body-container -->
+        
+        <div class="ping-footer-container">
+            <div class="ping-footer">
+                <div class="ping-credits"></div>
+            <div class="ping-copyright">$templateMessages.getMessage("global.footerMessage")</div>
+            </div> <!-- .ping-footer -->
+        </div> <!-- .ping-footer-container -->
+        
+    </div><!-- .ping-container -->
+    
+</body>
+</html>

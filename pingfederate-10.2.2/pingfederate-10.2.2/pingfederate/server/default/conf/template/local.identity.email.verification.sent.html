@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+#*
+The server renders this HTML page in an end-user's browser upon
+sending an email for ownership verification.
+
+Velocity variables (identified by the $ character) are generated
+at runtime by the server.
+
+Change text or formatting as needed. Modifying Velocity statements
+is not recommended as it may interfere with expected server behavior.
+*#
+
+<!-- template name: local.identity.email.verification.sent.html -->
+
+#set( $messageKeyPrefix = "local.identity.email.verification.sent." )
+
+<html lang="$pluginLocale.getLanguage()" dir="ltr">
+<head>
+    <title>$templateMessages.getMessage($messageKeyPrefix, "title")</title>
+    <base href="$CurrentPingFedBaseURL"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css"/>
+</head>
+
+<body>
+
+<div class="ping-container ping-signin">
+
+    <div class="ping-header">
+        $templateMessages.getMessage($messageKeyPrefix, "title")
+    </div>
+    <!-- .ping-header -->
+
+    <div class="ping-body-container">
+        <div>
+            <form method="POST" action="" autocomplete="off">
+
+                <div class="ping-messages">
+                    <p>$templateMessages.getMessage($messageKeyPrefix, "onetimeLinkSent")</p>
+                </div>
+
+                <div class="ping-buttons">
+                    <input type="hidden" name="$ok" value=""/>
+                    <input type="hidden" name="$cancel" value=""/>
+
+                </div>
+                <!-- .ping-buttons -->
+
+            </form>
+        </div>
+        <!-- .ping-body -->
+    </div>
+    <!-- .ping-body-container -->
+
+    <div class="ping-footer-container">
+        <div class="ping-footer">
+            <div class="ping-credits"></div>
+            <div class="ping-copyright">$templateMessages.getMessage("global.footerMessage")</div>
+        </div>
+        <!-- .ping-footer -->
+    </div>
+    <!-- .ping-footer-container -->
+
+</div>
+<!-- .ping-container -->
+
+<script type="text/javascript">
+
+    function postOk() {
+        document.forms[0]['$ok'].value = 'clicked';
+        document.forms[0].submit();
+    }
+    function postOnReturn(e) {
+        var keycode;
+        if (window.event) keycode = window.event.keyCode;
+        else if (e) keycode = e.which;
+        else return true;
+
+        if (keycode == 13) {
+        	document.forms[0]['$ok'].value = 'clicked';
+            document.forms[0].submit();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function setMobile(mobile) {
+        var className = ' mobile',
+            hasClass = (bodyTag.className.indexOf(className) !== -1);
+
+        if(mobile && !hasClass) {
+            bodyTag.className += className;
+
+        } else if (!mobile && hasClass) {
+            bodyTag.className = bodyTag.className.replace(className, '');
+        }
+
+        <!-- Check if this is the PingOne Mobile App -->
+	    #if($HttpServletRequest.getHeader('X-Ping-Client-Version'))
+	    	if(mobile) {
+        		bodyTag.className += ' embedded';
+        	}
+    	#end
+    }
+    function getScreenWidth() {
+        return (window.outerHeight) ? window.outerWidth : document.body.clientWidth;
+    }
+
+    var bodyTag = document.getElementsByTagName('body')[0],
+        width = getScreenWidth();
+
+    if(/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        setMobile(true);
+    } else {
+        setMobile((width <= 480));
+        window.onresize = function() {
+            width = getScreenWidth();
+            setMobile((width <= 480));
+        }
+    }
+</script>
+
+</body>
+</html>
